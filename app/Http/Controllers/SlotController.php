@@ -35,12 +35,12 @@ class SlotController extends Controller
                 $newline[] = $lines[$value][$key];
             }
             $checkedLine = $this->checkPaylines($newline); // check the line for special symbols and length
-            $statusLine[] = $checkedLine; // save the checked value for symbol conversion details
+            $checkedLine['lineIndex'] = $index;
+            $checkedLine['line'] = $newline;
+            if(!empty($checkedLine['swap']))$statusLine[] = $checkedLine; // save the checked value for symbol conversion details
             if($checkedLine['length'] >= 3 ) { // if the line consecutive symbols length is bigger than 3 than save the payline and increment the win
                 foreach ($data->pays as $pay){ // loop the pays data and save the win
                     if($pay[0] == $checkedLine['symbol'] && $pay[1] == $checkedLine['length']){
-                        $checkedLine['lineIndex'] = $index;
-                        $checkedLine['line'] = $newline;
                         $checkedLine['rawPayment'] = $pay[2];
                         $checkedLine['stake'] = $stake;
                         $checkedLine['payment'] = $pay[2]*$stake;
@@ -63,7 +63,7 @@ class SlotController extends Controller
                 'winLine' => $payLine, // paylines
             ),
             'symbol_conversion' => $statusLine , // symbol conversion details
-            'paylines' => $payLine // paylines
+            'payLines' => $payLine // paylines
         ]);
     }
 
